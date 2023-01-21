@@ -1,6 +1,6 @@
 const User = require('../models/UserModel')
 const { StatusCodes } = require('http-status-codes')
-const {BadRequestError} = require('../error')
+const {BadRequestError, UnauthenticatedError} = require('../error')
 const jwt = require ('jsonwebtoken')
 
 
@@ -16,7 +16,29 @@ const register = async (req, resp) => {
 
 
     const login = async (req, resp) => {
-    resp.send(' login user')
+
+        const {email, password} = req.body 
+
+        if (!email || !password) { 
+            throw  new BadRequestError('please provied email and  password')
+        }
+        const user = await User.findOne({email})
+
+
+        if(!user) {
+            throw new UnauthenticatedError('Invalid Credentials')
+        }
+        //comapre password , and  check  if  password  is  correct
+        const isPasswordCorrect = await user.ComparePassword(password)
+       
+       if(!isPasswordCorrect) {
+        throw new UnauthenticatedError('Invalid Credentials')
+       }
+        //if user exist and match create a token for  the user
+        const  token = user.createJWT()
+        console.log('user  logged in')
+
+    resp.status(StatusCodes.OK).json({user:{name: user.name, token}})
 }
 
 

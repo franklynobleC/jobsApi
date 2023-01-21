@@ -2,6 +2,7 @@
 require('dotenv').config()   // get  env file
 //async errors 
 require('express-async-errors');
+const authenticateUser = require('./middleware/auth')
 
 const  express = require('express');
 
@@ -26,7 +27,7 @@ app.use(express.json()); // send  the response as json
 
 //routes 
 
- app.use('/api/v1/auth', authRouter)
+ app.use('/api/v1/auth', authRouter).
  app.use('/api/v1/jobs', jobsRouter)
  
 
