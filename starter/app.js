@@ -2,7 +2,8 @@
 require('dotenv').config()   // get  env file
 //async errors 
 require('express-async-errors');
-const authenticateUser = require('./middleware/auth')
+
+
 
 const  express = require('express');
 
@@ -14,6 +15,7 @@ const connectDB = require('./db/connectdb')
 //error handler
 const notFoundMiddleware = require('./middleware/error-handlers');
 const { default: mongoose } = require('mongoose');
+const authenticationMiddleware = require('./middleware/auth');
 // const errorMiddleware = require('./middleware/not-found')
 
 //middleware 
@@ -27,8 +29,8 @@ app.use(express.json()); // send  the response as json
 
 //routes 
 
- app.use('/api/v1/auth', authRouter).
- app.use('/api/v1/jobs', jobsRouter)
+ app.use('/api/v1/auth', authRouter)
+ app.use('/api/v1/jobs', authenticationMiddleware, jobsRouter)
  
 
 //if error, use  this route 

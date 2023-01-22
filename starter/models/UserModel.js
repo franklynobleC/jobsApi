@@ -42,7 +42,7 @@ UserSchema.methods.getName = function () {
     return this.name
 }
 
- //use  mongoose  middleware for JWT
+ //use  mongoose  middleware to  create JWT
 UserSchema.methods.createJWT = function () {
     return jwt.sign({ userId: this._id, name: this.name}, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_LIFETIME,

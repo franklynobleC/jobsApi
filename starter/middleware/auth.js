@@ -6,11 +6,11 @@
 
 
 
-  const authenticationMiddleware = async(req, resp, next) => {
+  const authenticationMiddleware = async (req, resp, next) => {
     //check  header
 
     const  authHeader = req.headers.authorization
-    if(!authHeader || !authHeader.startsWith('Beare ')){
+    if(!authHeader || !authHeader.startsWith('Bearer')){
       throw new UnauthenticatedError('Authentication invalid')
           }
 
@@ -19,7 +19,7 @@
           try{
                 const  payLoad = jwt.verify(token, process.env.JWT_SECRET)
                  //attach  user to the  jobroutes
-                 req.user = {userId:payLoad.userId, name:payLoad.name}
+                 req.user = {userId: payLoad.userId, name: payLoad.name}
                 next()
                 }catch(err) {
                 console.log('error')
