@@ -3,11 +3,27 @@ const {BadRequestError, NotFoundError} = require('../error')
 const { StatusCodes } = require('http-status-codes')
 
 const getAllJobs = async (req, resp) => {
-    resp.send(' get all jobs')
+
+    const jobs = await Job.find({createdBy: req.user.userId }).sort('createdAt')
+    resp.status(StatusCodes.OK).json({jobs, count: jobs.length})
+    
 }
 const getJob = async (req, resp) => {
     
-    resp.send(' get job')
+      console.log('get a single Job')
+    const{ user: {userId}, params: {id: jobId},} = req    // get the entire document and  destructure  the details  into the params
+
+
+     const singleJob = await Job.findOne({
+        _id: jobId,
+         createdBy: userId,
+     })
+     if (!singleJob) {
+      throw new NotFoundError('No job  with', jobId)
+     }
+     console.log(singleJob)
+    
+    resp.status(StatusCodes.OK).json({singleJob})
 }
 
 
@@ -25,14 +41,30 @@ const deleteJob = async (req, resp) => {
 }
 
 
-const updateJob = async ()=> {
-    resp.send('update job')
+const updateJob = async (req, resp)=> {
+    // distructure the  entire object  into the  following request
+    const {
+        body: {company,position},
+        user: {userId },
+        params: {id: jobId },
+    } = req
+
+    if (company === '' || position === '') {
+        throw new BadRequestError("Company  or  position  can not be  empty")
+    }
+       const job = await Job.findOneAndUpdate({_id:jobId,createdBy:userId},req.body, {new:true, runValidators: true})
+
+      if(!job) {
+        throw new NotFoundError(`no job with id ${jobId}`)
+      }
+    //    resp.send('update job')
+    resp.status(StatusCodes.OK).json({job})
 }
 
 module.exports = {
     getAllJobs,
     createJob,
     getJob,
-    deleteJob,
+    deleteJob,   
     updateJob
 }

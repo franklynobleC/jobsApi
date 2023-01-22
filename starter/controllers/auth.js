@@ -39,7 +39,7 @@ const register = async (req, resp) => {
         const  token = user.createJWT()
         console.log('user  logged in')
 
-    resp.status(StatusCodes.OK).json({user:{name: user.name, token}})
+    resp.status(StatusCodes.OK).json({user:{name: user.name,}, token})
 }
 
 
