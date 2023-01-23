@@ -37,7 +37,12 @@ const createJob = async (req, resp) => {
 }
 
 const deleteJob = async (req, resp) => {
-    resp.send(' delete job')
+     req.body.createdBy = req.user.userId
+    
+     // get the single  value  of  object and  delete
+     const job = await Job.findOneAndDelete(req.body)
+     resp.status(StatusCodes.OK).json(job)
+
 }
 
 
