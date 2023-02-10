@@ -49,7 +49,7 @@ const deleteJob = async (req, resp) => {
 const updateJob = async (req, resp)=> {
     // distructure the  entire object  into the  following request
     const {
-        body: {company,position},
+        body: {company, position},
         user: {userId },
         params: {id: jobId },
     } = req
